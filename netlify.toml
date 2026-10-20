@@ -1,0 +1,27 @@
+# netlify.toml — SentinelX frontend on Netlify
+
+[build]
+  base    = "frontend"
+  command = "npm run build"
+  publish = "dist"
+
+[build.environment]
+  NODE_VERSION = "20"
+
+# Proxy /api/* → Fly.io backend (URL injected at deploy time via env var or
+# replaced below once the Fly app URL is known).
+# NOTE: Update BACKEND_URL to your actual Fly.io app URL after first deploy.
+[[redirects]]
+  from   = "/api/*"
+  to     = "https://sentinelx-backend.fly.dev/api/:splat"
+  status = 200
+  force  = true
+
+  [redirects.headers]
+    X-Forwarded-Host = ":host"
+
+# SPA fallback — all other routes serve index.html
+[[redirects]]
+  from   = "/*"
+  to     = "/index.html"
+  status = 200

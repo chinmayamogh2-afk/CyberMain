@@ -1,0 +1,40 @@
+# fly.toml — SentinelX backend on Fly.io
+# Deploy with: flyctl deploy (from the backend/ directory)
+
+app = "sentinelx-backend"
+primary_region = "sin"          # Singapore — closest to India
+
+[build]
+  dockerfile = "Dockerfile"
+
+[env]
+  NODE_ENV       = "production"
+  PORT           = "4000"
+  HOST           = "0.0.0.0"
+  DB_DRIVER      = "sqlite"
+  SQLITE_PATH    = "/data/sentinelx.db"
+  UPLOAD_DIR     = "/app/storage/uploads"
+  ENABLE_DEMO_SEED = "true"
+  # FRONTEND_ORIGIN and SELF_BASE_URL are set via: flyctl secrets set
+  # SESSION_SECRET, CSRF_SECRET, DATA_ENCRYPTION_KEY are set via: flyctl secrets set
+
+[http_service]
+  internal_port = 4000
+  force_https   = true
+  auto_stop_machines  = "stop"
+  auto_start_machines = true
+  min_machines_running = 0
+
+  [http_service.concurrency]
+    type       = "requests"
+    hard_limit = 200
+    soft_limit = 150
+
+[[mounts]]
+  source      = "sentinelx_data"
+  destination = "/data"
+
+[[vm]]
+  memory = "512mb"
+  cpu_kind = "shared"
+  cpus = 1
