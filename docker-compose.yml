@@ -1,0 +1,59 @@
+# ─────────────────────────────────────────────────────────────────────────────
+# SentinelX — local demonstration stack.
+#
+# Brings up the backend API and the frontend (served by nginx, proxying /api).
+# Binds only to 127.0.0.1: the platform hosts intentionally vulnerable
+# endpoints and must never be reachable from the network (spec §41).
+#
+#   docker compose up --build        # SQLite (default, zero config)
+#   docker compose --profile pg up    # with the optional Postgres service
+#
+# Generate secrets first:  ./scripts/gen-secrets.sh > .env.docker
+# ─────────────────────────────────────────────────────────────────────────────
+services:
+  backend:
+    build: ./backend
+    env_file:
+      - .env.docker
+    environment:
+      NODE_ENV: production
+      HOST: 0.0.0.0            # inside the container; published only to loopback
+      PORT: "4000"
+      FRONTEND_ORIGIN: http://localhost:8080
+      SELF_BASE_URL: http://127.0.0.1:4000
+      DB_DRIVER: sqlite
+    volumes:
+      - sentinelx-data:/data
+      - sentinelx-uploads:/app/storage
+    ports:
+      - "127.0.0.1:4000:4000"
+    restart: unless-stopped
+
+  frontend:
+    build: ./frontend
+    depends_on:
+      - backend
+    ports:
+      - "127.0.0.1:8080:80"
+    restart: unless-stopped
+
+  # Optional PostgreSQL, for demonstrating the platform against a server DB.
+  # Enable with:  docker compose --profile pg up
+  # (The application's supported driver is SQLite; see docs/ARCHITECTURE.md for
+  # the Postgres adapter status.)
+  postgres:
+    image: postgres:16-alpine
+    profiles: ["pg"]
+    environment:
+      POSTGRES_USER: sentinelx
+      POSTGRES_PASSWORD: sentinelx
+      POSTGRES_DB: sentinelx
+    ports:
+      - "127.0.0.1:5432:5432"
+    volumes:
+      - sentinelx-pg:/var/lib/postgresql/data
+
+volumes:
+  sentinelx-data:
+  sentinelx-uploads:
+  sentinelx-pg:

@@ -1,0 +1,43 @@
+# Dependencies
+node_modules/
+.pnp
+.pnp.js
+
+# Secrets — never commit real environment files (spec §31)
+.env
+.env.local
+.env.*.local
+!.env.example
+
+# Build output
+dist/
+build/
+*.tsbuildinfo
+
+# Database + uploaded user content
+database/*.db
+database/*.db-journal
+database/*.db-wal
+database/*.db-shm
+backend/storage/
+
+# Generated security reports
+backend/storage/reports/
+*.report.json
+
+# Logs
+*.log
+npm-debug.log*
+logs/
+
+# Editor / OS
+.DS_Store
+.idea/
+.vscode/*
+!.vscode/extensions.json
+*.swp
+
+# Test + coverage artefacts
+coverage/
+.nyc_output/
+.env.docker

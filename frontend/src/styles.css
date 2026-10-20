@@ -1,0 +1,45 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root { color-scheme: dark; }
+
+html, body, #root { height: 100%; }
+body {
+  margin: 0;
+  background:
+    radial-gradient(1200px 600px at 80% -10%, rgba(56,189,248,0.08), transparent 60%),
+    radial-gradient(900px 500px at 0% 10%, rgba(14,165,233,0.06), transparent 55%),
+    #070b14;
+  color: #cbd5e1;
+  font-family: 'Inter', system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Translucent panel — glassmorphism, used sparingly per spec §25. */
+.glass {
+  background: rgba(13, 21, 36, 0.72);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(148, 163, 184, 0.12);
+}
+.glass-soft { background: rgba(19, 29, 48, 0.5); border: 1px solid rgba(148,163,184,0.08); }
+
+.terminal {
+  background: #060a12;
+  border: 1px solid rgba(56,189,248,0.15);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12.5px;
+  line-height: 1.6;
+}
+
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(148,163,184,0.18); border-radius: 6px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(148,163,184,0.3); }
+
+/* Focus ring for keyboard accessibility */
+*:focus-visible { outline: 2px solid #38bdf8; outline-offset: 2px; border-radius: 4px; }
+
+code, pre { font-family: 'JetBrains Mono', monospace; }
