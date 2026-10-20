@@ -41,3 +41,6 @@ logs/
 coverage/
 .nyc_output/
 .env.docker
+
+# Local Netlify folder
+.netlify
